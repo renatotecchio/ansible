@@ -1,0 +1,10 @@
+---
+# tasks file for puppet
+
+- name: Check if OS is Debian Family
+  include_tasks: debian.yml
+  when: ansible_os_family == "Debian"
+
+#- name: Check if OS is RedHat Family
+#  include_tasks: redhat.yml
+#  when: ansible_os_family == "RedHat"

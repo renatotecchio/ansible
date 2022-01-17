@@ -1,0 +1,4 @@
+---
+all:
+  vars:
+    vault_windows_administrator_password: 

@@ -1,0 +1,7 @@
+---
+- name: Executing initial Windows Setup
+  hosts: win
+  #become: yes
+
+  roles:
+    - windowssetup

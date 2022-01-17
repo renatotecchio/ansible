@@ -1,0 +1,24 @@
+---
+# tasks file for puppet
+
+- name: Download Puppet{{ puppet_version }} repository.
+  get_url:
+    url: https://apt.puppetlabs.com/puppet6-release-{{ ansible_distribution_release }}.deb
+    dest: /tmp/puppet{{ puppet_version }}-release-{{ ansible_distribution_release }}.deb
+    validate_certs: false    
+
+- name: Install .DEB repository
+  command: dpkg -i /tmp/puppet{{ puppet_version }}-release-{{ ansible_distribution_release }}.deb
+
+- name: Install Puppet and Puppet lint
+  apt:
+    pkg:
+      - puppetserver
+      - puppet-lint
+    update_cache: yes
+    state: present
+
+#- name: Enable Puppet service
+#  ansible.builtin.service:
+#    name: puppetserver
+#    state: started

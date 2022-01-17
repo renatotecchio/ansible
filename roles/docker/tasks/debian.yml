@@ -1,0 +1,106 @@
+---
+# tasks file for docker
+- name: Remove previous instalation
+  apt:
+    pkg: 
+    - docker
+    - docker-engine
+    - docker.io
+    - containerd
+    - runc
+    state: absent
+  become: yes
+  
+- name: Install Docker-Engine dependecy
+  apt:
+    pkg:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg2  
+    - software-properties-common
+    update_cache: yes
+    state: present
+  become: yes
+  
+
+- name: Add Docker GPG Key    
+  apt_key:
+    url: "https://download.docker.com/linux/debian/gpg"
+    state: present
+  become: yes
+  when: ansible_os_family == "Debian" and ansible_architecture == "x86_64"
+
+- name: Add Docker repository
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_distribution_release  }} stable"
+    state: present
+  become: yes
+  when: ansible_os_family == "Debian" and ansible_architecture == "x86_64"
+
+- name: Install Docker
+  apt:
+    pkg:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    update_cache: yes
+    state: present
+  become: yes
+  when: ansible_os_family == "Debian" and ansible_architecture == "x86_64"
+
+- name: Prevent Docker-CE from being upgraded
+  dpkg_selections:
+    name: docker-ce
+    selection: hold
+  become: yes
+  when: ansible_os_family == "Debian" and ansible_architecture == "x86_64"
+
+- name: Prevent Docker-CE CLI from being upgraded
+  dpkg_selections:
+    name: docker-ce-cli
+    selection: hold
+  become: yes
+  when: ansible_os_family == "Debian" and ansible_architecture == "x86_64"
+
+- name: Prevent Containerd.io from being upgraded
+  dpkg_selections:
+    name: containerd.io
+    selection: hold
+  become: yes
+  when: ansible_os_family == "Debian" and ansible_architecture == "x86_64"
+  
+- name: Download convenience script for ARM architecture
+  get_url:
+    url: https://get.docker.com
+    dest: /tmp/get-docker.sh
+    mode: 0755
+  become: yes
+  when: ansible_os_family == "Debian" and ansible_architecture == "armv7l"
+
+- name: Run convenience script for ARM architecture
+  command: /tmp/get-docker.sh
+  become: yes
+  when: ansible_os_family == "Debian" and ansible_architecture == "armv7l"
+
+- name: Remove script file
+  file:
+    path: /tmp/get-docker.sh
+    state: absent
+  when: ansible_os_family == "Debian" and ansible_architecture == "armv7l"
+
+- name: Installing Docker Compose
+  shell: |
+    curl -L "https://github.com/docker/compose/releases/download/v2.1.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
+  become: yes
+  when: ansible_os_family == "Debian" and ansible_architecture != "armv7l"
+
+- name: Installing Docker Compose
+  shell: |
+    curl -L "https://github.com/docker/compose/releases/download/v2.1.1/docker-compose-$(uname -s)-armv7" -o /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
+  become: yes
+  when: ansible_os_family == "Debian" and ansible_architecture == "armv7l"
+
+  

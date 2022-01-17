@@ -1,0 +1,18 @@
+---
+# tasks file for rundeck
+
+- name: Install Java
+  yum: name=java
+
+- name: Install the repository
+  ansible.builtin.command: rpm -Uvh http://repo.rundeck.org/latest.rpm
+  
+#- name: Install the repository
+#  yum: 
+#    name: http://repo.rundeck.org/latest.rpm
+#    state: present
+
+- name: Install Rundeck
+  yum: name=rundeck state=present
+
+# include: start service and unable firewall

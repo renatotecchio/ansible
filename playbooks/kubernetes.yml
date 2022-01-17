@@ -1,0 +1,14 @@
+---
+- name: --->>> Running Kubernetes Role <<<---
+  hosts: kubernetes-master
+  #become: yes
+  
+  roles:
+    - kubernetes
+
+- name: --->>> Running Kubernetes Role <<<---
+  hosts: kubernetes-worker
+  #become: yes
+  
+  roles:
+    - kubernetes

@@ -1,0 +1,39 @@
+---
+# tasks file for linuxsetup
+#O que falta fazer:
+# - Corrigir o vim
+# - mudar as configuracoes do ssh
+# - ver se o upgrade nao precia antes de update
+  
+#- name: Backup source.list
+#  command: cp /etc/apt/sources.list /etc/apt/sources.list_old
+
+#- name: Copy sources.list
+#  copy: 
+#    src: ../files/sources_debian{{ ansible_distribution_major_version }}.list
+#    dest: /etc/apt/sources.list
+#    backup: yes
+
+- name: Update all packages to their latest version
+  apt:
+    name: "*"
+    state: latest
+
+- name: Install default packages
+  apt:
+    pkg:
+    - vim 
+    - mc
+    - screen
+    - curl
+    - tcpdump
+    update_cache: yes  
+    state: present
+
+#- name: find out the default user at /home
+#  command: ls | cut -f1 | grep -n ^ | grep 1 | cut -d: -f2
+#  register: result
+
+
+#- name: Copy bashrc to root
+#  command: echo $result > /home/teste.txt

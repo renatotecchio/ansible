@@ -1,0 +1,16 @@
+---
+services: docker
+
+env:
+  - distro: centos6
+  - distro: centos7
+  - distro: debian8
+  - distro: debian9
+  - distro: ubuntu1604
+  - distro: ubuntu1404
+
+script:
+  - /bin/bash export "${distro}" && "${PWD}/tests/test.sh"
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/

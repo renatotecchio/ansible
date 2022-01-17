@@ -1,0 +1,10 @@
+---
+- name: Execute Zabbix machine roles
+  hosts: zabbix
+  collections:
+    - community.zabbix
+
+  become: yes
+  roles: 
+    - zabbix_server
+    

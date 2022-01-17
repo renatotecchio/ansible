@@ -1,0 +1,91 @@
+---
+# tasks file for kubernetes
+- name: Install Docker-Engine dependecy
+  apt:
+    pkg:
+    - apt-transport-https
+    - curl
+    update_cache: yes
+    state: present
+  become: yes
+
+- name: Add Kubernets GPG Key    
+  apt_key:
+    url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+    state: present
+  become: yes
+
+- name: Add Kubernets repository
+  apt_repository:
+    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+    filename: kubernetes.list
+  become: yes
+
+- name: Install Kubernets
+  apt:
+    pkg:
+    - kubelet
+    - kubeadm
+    - kubectl
+    update_cache: yes
+    state: present
+  become: yes
+
+- name: Prevent kubelet from being upgraded
+  dpkg_selections:
+    name: kubelet
+    selection: hold
+  become: yes
+
+- name: Prevent kubeadm from being upgraded
+  dpkg_selections:
+    name: kubeadm
+    selection: hold
+  become: yes
+
+- name: Prevent kubectl from being upgraded
+  dpkg_selections:
+    name: kubectl
+    selection: hold
+  become: yes
+
+- name: Desable Swap
+  command: swapoff -a
+  become: yes
+
+- name: Persisting Swap desabled
+  shell: awk '/[/]swap/{$0="#"$0} 1' /etc/fstab >/etc/fstab.tmp && mv /etc/fstab.tmp /etc/fstab
+  become: yes
+
+
+#kubeadm init --apiserver-advertise-address=192.168.10.160 --pod-network-cidr=10.244.0.0/16 
+#  mkdir -p $HOME/.kube
+#  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+#  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+
+
+#Your Kubernetes control-plane has initialized successfully!
+
+#To start using your cluster, you need to run the following as a regular user:
+
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+#Alternatively, if you are the root user, you can run:
+
+#  export KUBECONFIG=/etc/kubernetes/admin.conf
+
+#You should now deploy a pod network to the cluster.
+#Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+#  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+#Then you can join any number of worker nodes by running the following on each as root:
+
+
+#kubeadm join 192.168.10.160:6443 --token cd7fku.q7q9031cw0vy5q48 \
+#	--discovery-token-ca-cert-hash sha256:412a67c5d1a3d3575ea5340f075f8fbe80090257646b0f6d98acf782e0374f67 
+
+

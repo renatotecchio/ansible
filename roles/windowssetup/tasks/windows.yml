@@ -1,0 +1,7 @@
+---
+# tasks file for windowssetup
+- name: Creating a temporary folder...
+  win_file:
+    path: C:\Temp
+    state: directory
+  

@@ -1,0 +1,9 @@
+---
+- name: Install MariaDB
+  hosts: linux
+
+  tasks:
+  - name: 
+  apt:
+    pkt:
+    - mariadb-server

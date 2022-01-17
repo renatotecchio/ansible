@@ -1,0 +1,24 @@
+---
+# tasks file for jenkins
+- name: Add a Jenkins repository
+  get_url:
+    url: https://pkg.jenkins.io/redhat-stable/jenkins.repo
+    dest: /etc/yum.repos.d/jenkins.repo
+
+- name: Import Jenkins' PGP key 
+  rpm_key:
+   key: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+   state: present
+   validate_certs: no
+
+- name: Upgrade all packages
+  yum:
+    name: '*'
+    state: latest
+
+- name: Install Jenkins
+  yum:
+    name:
+      - jenkins
+      - java-1.8.0-openjdk-devel
+    state: present

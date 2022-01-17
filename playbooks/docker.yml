@@ -1,0 +1,7 @@
+---
+- name: --->>> Running Docker Role <<<---
+  hosts: docker
+  #become: yes
+  
+  roles:
+    - docker

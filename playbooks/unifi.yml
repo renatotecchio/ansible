@@ -1,0 +1,6 @@
+---
+- name: Executando as roles na maquina docker
+  hosts: unifi
+  become: yes
+  roles:
+    - unifi

@@ -1,0 +1,36 @@
+.template:testing_distro: &testing_distro
+  stage: test
+  script:
+  - export distro=$distro
+  - export container_id=$(uuidgen)
+  - tests/test.sh
+
+testing:debian8:
+  variables:
+    distro: "debian8"
+  <<: *testing_distro
+
+testing:debian9:
+  variables:
+    distro: "debian9"
+  <<: *testing_distro
+
+testing:ubuntu1404:
+  variables:
+    distro: "ubuntu1404"
+  <<: *testing_distro
+
+testing:ubuntu1604:
+  variables:
+    distro: "ubuntu1604"
+  <<: *testing_distro
+
+testing:centos6:
+  variables:
+    distro: "centos6"
+  <<: *testing_distro
+
+testing:centos7:
+  variables:
+    distro: "centos7"
+  <<: *testing_distro

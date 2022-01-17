@@ -1,0 +1,9 @@
+---
+- name: Execute DevOps machine holes
+  hosts: devops
+  become: yes
+
+  roles:
+    - linuxsetup 
+    - puppet
+    - gitlab

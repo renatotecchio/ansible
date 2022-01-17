@@ -1,0 +1,3 @@
+---
+# vars file for puppet
+puppet_version: 7

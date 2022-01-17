@@ -1,0 +1,8 @@
+---
+- name: Execute Automation machine roles
+  hosts: automation
+  become: yes
+  roles:
+    - linuxsetup
+    - rundeck
+    - jenkins

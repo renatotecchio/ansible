@@ -1,0 +1,78 @@
+---
+# tasks file for unifi
+# ref: https://devopstales.github.io/home/install-unifi-controller/
+# to access: http://IP:8080 ou https://IP:8443
+
+- name: Install required packages
+  apt:
+    pkg:
+    - apt-transport-https
+    - ca-certificates
+    - wget
+    - dirmngr
+    - gnupg
+    - gnupg2
+    - software-properties-common
+    - multiarch-support
+    update_cache: yes
+    state: present
+
+- name: Add MongoDB signing key    
+  apt_key:
+    url: https://www.mongodb.org/static/pgp/server-3.4.asc
+    state: present
+
+- name: Add Mongo repository
+  apt_repository:
+    repo: deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.4 main
+    filename: mongodb-org-3.4.list
+    state: present
+
+- name: Install libssl
+  apt:
+    deb: http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.0.0_1.0.1t-1+deb8u12_amd64.deb
+
+- name: Add Java 8 signing key
+  apt_key:
+    url: https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public
+    state: present
+
+- name: Add Java 8 repository
+  command: add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/
+    
+- name: Install Java 8
+  apt:
+    pkg:
+    - adoptopenjdk-8-hotspot
+    update_cache: yes
+    state: present
+
+- name: 
+  lineinfile:
+    dest: /etc/profile
+    line: 'export JAVA_HOME="/usr/lib/jvm/adoptopenjdk-8-hotspot-amd64"'
+    insertafter: EOF
+    state: present
+
+- name: Source Profile
+  shell: source /etc/profile
+  args:
+    executable: /bin/bash
+
+- name: Add Unifi signing key
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: 06E85760C0A52C50
+
+- name: Add Unifi Repository
+  apt_repository:
+    repo: deb https://www.ui.com/downloads/unifi/debian stable ubiquiti
+    filename: 100-ubnt-unifi.list
+    state: present
+
+- name: Install Unifi Controller
+  apt:
+    pkg:
+    - unifi
+    update_cache: yes
+    state: present

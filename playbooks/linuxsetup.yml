@@ -1,0 +1,74 @@
+---
+# tasks file for linuxsetup
+#O que falta fazer:
+# - Corrigir o vim
+# - mudar as configuracoes do ssh
+# - ver se o upgrade nao precia antes de update
+  
+#- name: Backup source.list
+#  command: cp /etc/apt/sources.list /etc/apt/sources.list_old
+
+- name: Executing initial --->>> Default Linux Setup <<<---
+  hosts: linuxsetup
+
+  tasks:
+  - name: Copy sources.list
+    copy: 
+      src: sources_debian{{ ansible_distribution_major_version }}.list
+      dest: /etc/apt/sources.list
+      backup: yes
+    become: yes
+    when: ansible_os_family == "Debian9"
+
+  - name: Update all packages to their latest version
+    apt:
+      name: "*"
+      update_cache: yes
+      state: latest
+    become: yes
+    when: ansible_os_family == "Debian"
+
+  - name: Install default packages
+    apt:
+      pkg:
+      - vim 
+      - mc
+      - screen
+      - curl
+      - tcpdump
+      - nfs-kernel-server
+      - screen
+      - timeshift #to Backup & Restore Linux System Settings
+      - lshw
+      - udisks2 #to manages drives, D-Bus Interfaces 
+      - sshpass
+      - git
+      - jq
+      - telnet
+      update_cache: yes
+      state: present
+    become: yes
+    when: ansible_os_family == "Debian"
+
+  - name: Configure vimrc
+    lineinfile:
+      path: /etc/vim/vimrc
+      regexp: '^(.*)syntax on(.*)$'
+      line: 'syntax on'
+    become: yes
+
+  - name: Copy bashrc
+    copy:
+      src: /home/pi/.bashrc
+      dest: /root
+      remote_src: yes
+    become: yes
+    when: ansible_os_family == "Debian" and ansible_architecture == "armv7l"
+
+
+#- name: find out the default user at /home
+#  command: ls | cut -f1 | grep -n ^ | grep 1 | cut -d: -f2
+#  register: result
+
+#- name: Copy bashrc to root
+#  command: echo $result > /home/teste.txt

@@ -1,0 +1,5 @@
+---
+# This playbook deploys all playbooks.
+
+- import_playbook: ../playbooks/linuxsetup.yml
+- import_playbook: ../playbooks/docker.yml
